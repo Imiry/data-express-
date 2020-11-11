@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { getThemeValue } from '@/utils/theme_utils'
 export default {
   data () {
     return {
@@ -53,18 +55,20 @@ export default {
     // 设置给标题的样式
     comStyle () {
       return {
-        fontSize: this.titleFontSize + 'px'
+        fontSize: this.titleFontSize + 'px',
+        color: getThemeValue(this.theme).titleColor
       }
     },
     marginStyle () {
       return {
         marginLeft: this.titleFontSize + 'px'
       }
-    }
+    },
+    ...mapState(['theme'])
   },
   methods: {
     initChart () {
-      this.chartInstane = this.$echarts.init(this.$refs.trend_ref, 'chalk')
+      this.chartInstane = this.$echarts.init(this.$refs.trend_ref,  this.theme)
       const initOption = {
         grid: {
           left: '3%',
@@ -175,6 +179,15 @@ export default {
       this.choiceType = currentType
       this.updateChart()
       this.showChoice = false
+    }
+  },
+  watch: {
+    theme () {
+      console.log('主题切换了')
+      this.chartInstane.dispose() // 销毁当前的图表
+      this.initChart() // 重新以最新的主题名称初始化图表对象
+      this.screenAdapter() // 完成屏幕的适配
+      this.updateChart() // 更新图表的展示
     }
   }
 }

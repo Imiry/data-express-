@@ -1,15 +1,15 @@
 <template>
-  <div class="screen-container">
+  <div class="screen-container" :style="containerStyle">
     <header class="screen-header">
       <div>
-        <!-- <img src="/public/static/img/" alt=""> -->
+        <img class="top" :src="headerSrc" alt="">
       </div>
       <span class="logo">
-        <!-- <img src="/public/static/img/header_border_dark.png" alt="" /> -->
+        <img :src="logoSrc" alt="" />
       </span>
       <span class="title">电商平台实时监控系统</span>
       <div class="title-right">
-        <!-- <img :src="themeSrc" class="qiehuan" @click="handleChangeTheme"> -->
+        <img :src="themeSrc" class="qiehuan" @click="handleChangeTheme">
         <span class="datetime">2049-01-01 00:00:00</span>
       </div>
     </header>
@@ -79,6 +79,8 @@ import Rank from '@/components/Rank.vue'
 import Seller from '@/components/Seller.vue'
 import Stock from '@/components/Stock.vue'
 import Trend from '@/components/Trend.vue'
+import { mapState } from 'vuex'
+import { getThemeValue } from '@/utils/theme_utils'
 export default {
   data () {
     return {
@@ -102,7 +104,13 @@ export default {
       this.$nextTick(() => {
         this.$refs[chartName].screenAdapter()
       })
+
     },
+    handleChangeTheme () {
+      // 修改VueX中数据
+      this.$store.commit('changeTheme')
+    },
+
   },
   components: {
     Hot,
@@ -112,7 +120,24 @@ export default {
     Stock,
     Trend
   },
-
+  computed: {
+    logoSrc () {
+      return '/static/img/' + getThemeValue(this.theme).logoSrc
+    },
+    headerSrc () {
+      return '/static/img/' + getThemeValue(this.theme).headerBorderSrc
+    },
+    themeSrc () {
+      return '/static/img/' + getThemeValue(this.theme).themeSrc
+    },
+    containerStyle () {
+      return {
+        backgroundColor: getThemeValue(this.theme).backgroundColor,
+        color: getThemeValue(this.theme).titleColor
+      }
+    },
+    ...mapState(['theme'])
+  }
 }
 </script>
 <style lang="less" scoped>
@@ -143,6 +168,7 @@ export default {
   > div {
       img {
         width: 100%;
+        margin-top: -8px
       }
     }
   .title {
