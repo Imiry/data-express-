@@ -1,0 +1,27 @@
+
+<template>
+  <div class="com-page">
+      <Seller></Seller>
+  </div>
+</template>
+
+<script>
+import Seller from '@/components/Seller'
+export default {
+  name: 'SellerPage',
+  components:{
+      Seller
+  },
+  data() { 
+    return {
+
+    }
+  }
+ }
+</script>
+
+<style lang="less" >
+  .com-page{
+
+  }
+</style>
